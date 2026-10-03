@@ -1,0 +1,17 @@
+{
+  "name": "Consultora Contable",
+  "short_name": "Consultora",
+  "description": "Agende la recogida de sus documentos contables",
+  "lang": "es",
+  "start_url": "/cliente",
+  "scope": "/cliente/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0D47A1",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

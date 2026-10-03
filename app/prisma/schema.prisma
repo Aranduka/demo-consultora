@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Rol {
+  ADMIN
+  CLIENTE
+}
+
+enum EstadoVisita {
+  PENDIENTE   // solicitada por el cliente
+  CONFIRMADA  // admin confirmó y asignó encargado
+  COMPLETADA  // documentos recogidos
+  CANCELADA
+}
+
+model Usuario {
+  id               Int       @id @default(autoincrement())
+  email            String    @unique
+  passwordHash     String
+  rol              Rol
+  activo           Boolean   @default(true)
+  debeCambiarClave Boolean   @default(true) // true al crear con clave temporal
+  ultimoAcceso     DateTime?
+  creadoEn         DateTime  @default(now())
+  actualizadoEn    DateTime  @updatedAt
+  cliente          Cliente?
+
+  @@map("usuarios")
+}
+
+model Cliente {
+  id            Int      @id @default(autoincrement())
+  usuarioId     Int      @unique
+  usuario       Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  nombre        String   // razón social o nombre completo
+  documento     String   @unique // RUC / CI
+  telefono      String
+  direccion     String
+  ciudad        String?
+  notas         String?  @db.Text
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+  visitas       Visita[]
+
+  @@map("clientes")
+}
+
+model CategoriaServicio {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique
+  orden     Int        @default(0)
+  servicios Servicio[]
+
+  @@map("categorias_servicio")
+}
+
+model Servicio {
+  id          Int               @id @default(autoincrement())
+  categoriaId Int
+  categoria   CategoriaServicio @relation(fields: [categoriaId], references: [id])
+  nombre      String
+  descripcion String?           @db.Text
+  precio      Decimal           @db.Decimal(12, 2)
+  moneda      String            @default("PYG")
+  periodicidad String?          // ej. "mensual", "anual", "por trámite"
+  activo      Boolean           @default(true)
+  creadoEn    DateTime          @default(now())
+  actualizadoEn DateTime        @updatedAt
+
+  @@map("servicios")
+}
+
+model Encargado {
+  id       Int      @id @default(autoincrement())
+  nombre   String
+  telefono String?
+  activo   Boolean  @default(true)
+  visitas  Visita[]
+
+  @@map("encargados")
+}
+
+model FranjaHoraria {
+  id         Int      @id @default(autoincrement())
+  etiqueta   String   // "09:00 - 11:00"
+  horaInicio String   // "09:00"
+  horaFin    String   // "11:00"
+  cupo       Int      @default(5) // visitas máximas por franja y día
+  activa     Boolean  @default(true)
+  visitas    Visita[]
+
+  @@map("franjas_horarias")
+}
+
+model Visita {
+  id          Int           @id @default(autoincrement())
+  clienteId   Int
+  cliente     Cliente       @relation(fields: [clienteId], references: [id])
+  franjaId    Int
+  franja      FranjaHoraria @relation(fields: [franjaId], references: [id])
+  encargadoId Int?
+  encargado   Encargado?    @relation(fields: [encargadoId], references: [id])
+  fecha       DateTime      @db.Date
+  direccion   String        // por defecto la del cliente, editable
+  observaciones String?     @db.Text // qué documentos se retirarán
+  estado      EstadoVisita  @default(PENDIENTE)
+  creadoEn    DateTime      @default(now())
+  actualizadoEn DateTime    @updatedAt
+
+  @@index([fecha, estado])
+  @@index([clienteId])
+  @@map("visitas")
+}

@@ -1,0 +1,20 @@
+[
+  { "categoria": "Contabilidad", "orden": 1, "servicios": [
+    { "nombre": "Contabilidad mensual", "descripcion": "Registro y balance mensual de operaciones para pequeñas empresas.", "precio": 450000, "periodicidad": "mensual" },
+    { "nombre": "Contabilidad para profesionales independientes", "descripcion": "Registro de ingresos y egresos para profesionales.", "precio": 200000, "periodicidad": "mensual" },
+    { "nombre": "Balance anual", "descripcion": "Elaboración y presentación del balance del ejercicio.", "precio": 1200000, "periodicidad": "anual" }
+  ]},
+  { "categoria": "Impuestos", "orden": 2, "servicios": [
+    { "nombre": "Liquidación mensual de IVA", "descripcion": "Cálculo y presentación de la declaración de IVA.", "precio": 150000, "periodicidad": "mensual" },
+    { "nombre": "Declaración de Renta personal", "descripcion": "Preparación y presentación de la declaración anual.", "precio": 350000, "periodicidad": "anual" },
+    { "nombre": "Regularización de obligaciones atrasadas", "descripcion": "Análisis y regularización de períodos pendientes.", "precio": 500000, "periodicidad": "por trámite" }
+  ]},
+  { "categoria": "Asesoría", "orden": 3, "servicios": [
+    { "nombre": "Consulta contable", "descripcion": "Sesión de asesoramiento personalizado de 1 hora.", "precio": 180000, "periodicidad": "por consulta" },
+    { "nombre": "Planificación tributaria", "descripcion": "Estrategia para optimizar la carga impositiva dentro de la ley.", "precio": 800000, "periodicidad": "por proyecto" }
+  ]},
+  { "categoria": "Trámites y registros", "orden": 4, "servicios": [
+    { "nombre": "Inscripción de RUC", "descripcion": "Alta de contribuyente y obligaciones iniciales.", "precio": 250000, "periodicidad": "por trámite" },
+    { "nombre": "Constitución de empresa", "descripcion": "Gestión integral de constitución y registros.", "precio": 2500000, "periodicidad": "por trámite" }
+  ]}
+]
