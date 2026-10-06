@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import ThemeRegistry from "@/components/ThemeRegistry";
 import { SITE } from "@/lib/site";
 
-const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], display: "swap", variable: "--font-jakarta" });
+// Fuente autoalojada (OFL): el build en CI no depende de Google Fonts
+const jakarta = localFont({
+  src: "./fonts/PlusJakartaSans-latin.woff2", // variable 400-800, subconjunto latin (cubre español)
+  weight: "400 800",
+  display: "swap",
+  variable: "--font-jakarta",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url.replace(/\/?$/, "/")),
