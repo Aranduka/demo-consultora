@@ -1,6 +1,6 @@
 # CLAUDE.md — Consultora Contable (DEMO)
 
-Sistema para una consultora contable: el **admin** (escritorio) gestiona clientes, catálogo y visitas de recogida de documentos; los **clientes** usan una **PWA** para agendar esas visitas; una **landing** pública muestra servicios/precios y redirige al login de la PWA.
+Sistema para una consultora contable: el **admin** (escritorio) gestiona clientes, catálogo y visitas de retiro de documentos; los **clientes** usan una **PWA** para agendar esas visitas; una **landing** pública muestra servicios/precios y redirige al login de la PWA.
 Es una DEMO: mantener todo **genérico, simple y en español**. No sobre-ingenierizar.
 
 ## Estructura (monorepo, todo en Docker)
@@ -20,7 +20,7 @@ Orquestación: `docker-compose.yml`. Nunca instalar ni ejecutar nada fuera de Do
 - PWA manual: `app/src/app/manifest.ts`/`public/sw.js` (sin librerías externas)
 
 ## Reglas de dominio (críticas)
-1. **Roles**: `ADMIN` y `CLIENTE`. El encargado de recogida NO es usuario: es un registro (`Encargado`).
+1. **Roles**: `ADMIN` y `CLIENTE`. El encargado de retiro NO es usuario: es un registro (`Encargado`).
 2. Los **clientes los da de alta el admin**: se crea `Usuario`(CLIENTE)+`Cliente` en una transacción con contraseña temporal; `debeCambiarClave=true` obliga a cambiarla en el primer ingreso. No hay auto-registro.
 3. **El panel admin NO es PWA ni instalable**: rutas bajo `/admin`; el manifest y el service worker se enlazan/registran **solo** en el layout `(cliente)`; manifest con `scope` y `start_url` dentro de `/cliente`; `/admin/*` responde `Cache-Control: no-store` y no se cachea nunca. En pantallas móviles `/admin` muestra aviso "Usar desde un ordenador".
 4. **La PWA solo sirve para agendar** (y ver/cancelar sus visitas, ver catálogo, cambiar clave). Un CLIENTE jamás accede a `/admin` ni a datos de otros clientes; un ADMIN no usa `/cliente`.

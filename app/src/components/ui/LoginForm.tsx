@@ -53,7 +53,7 @@ export default function LoginForm({ portal }: { portal: "admin" | "cliente" }) {
           <Stack spacing={2.5} mt={5}>
             {puntos[portal].map((p) => (
               <Stack key={p.t} direction="row" spacing={2} alignItems="center">
-                <Box sx={{ width: 44, height: 44, borderRadius: 3, bgcolor: "rgba(255,255,255,.14)", display: "grid", placeItems: "center" }}>{p.icon}</Box>
+                <Box sx={{ width: 44, height: 44, borderRadius: "12px", bgcolor: "rgba(255,255,255,.14)", display: "grid", placeItems: "center" }}>{p.icon}</Box>
                 <Box><Typography fontWeight={700}>{p.t}</Typography><Typography sx={{ opacity: 0.8 }}>{p.d}</Typography></Box>
               </Stack>
             ))}
@@ -65,11 +65,11 @@ export default function LoginForm({ portal }: { portal: "admin" | "cliente" }) {
       <Box sx={{ display: "grid", placeItems: "center", p: 3, background: { xs: "linear-gradient(180deg,#0B1B3A 0,#0D47A1 220px,#F4F7FB 220px)", md: "#fff" } }}>
         <Box sx={{ width: "100%", maxWidth: 400 }}>
           <Box sx={{ display: { md: "none" }, mb: 4 }}><Brand light /></Box>
-          <Box sx={{ bgcolor: "#fff", p: { xs: 3, md: 0 }, borderRadius: 4, boxShadow: { xs: "0 12px 40px rgba(15,23,42,.18)", md: "none" } }}>
+          <Box sx={{ bgcolor: "#fff", p: { xs: 3, md: 0 }, borderRadius: "16px", boxShadow: { xs: "0 12px 40px rgba(15,23,42,.18)", md: "none" } }}>
             <Stack spacing={2.5} component="form" onSubmit={onSubmit}>
               <Box>
                 <Typography variant="h5" component="h1">{portal === "admin" ? "Panel de administración" : "Bienvenido"}</Typography>
-                <Typography color="text.secondary">{portal === "admin" ? "Ingrese con su cuenta de administrador." : "Ingrese para agendar la recogida de sus documentos."}</Typography>
+                <Typography color="text.secondary">{portal === "admin" ? "Ingrese con su cuenta de administrador." : "Ingrese para agendar el retiro de sus documentos."}</Typography>
               </Box>
               {error && <Alert severity="error" role="alert">{error}</Alert>}
               <TextField name="email" label="Email" type="email" required autoComplete="username" autoFocus />

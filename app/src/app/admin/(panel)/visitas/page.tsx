@@ -40,7 +40,7 @@ export default function Visitas() {
 
   return (
     <Box>
-      <PageHeader title="Visitas de recogida" subtitle="Confirme, asigne encargado y marque como completadas." />
+      <PageHeader title="Visitas de retiro" subtitle="Confirme, asigne encargado y marque como completadas." />
       <Card>
         <Stack direction="row" gap={2} p={2} flexWrap="wrap" sx={{ borderBottom: "1px solid", borderColor: "divider" }}>
           <TextField type="date" label="Fecha" value={fecha} onChange={(e) => setFecha(e.target.value)} slotProps={{ inputLabel: { shrink: true } }} sx={{ maxWidth: 200 }} />

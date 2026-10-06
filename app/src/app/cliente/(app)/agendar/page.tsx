@@ -72,7 +72,7 @@ export default function Agendar() {
   return (
     <Stack spacing={3} component="form" onSubmit={onSubmit}>
       <Box>
-        <Typography variant="h5" component="h1">Agendar recogida</Typography>
+        <Typography variant="h5" component="h1">Agendar retiro</Typography>
         <Typography color="text.secondary">Un encargado pasará a retirar sus documentos.</Typography>
       </Box>
 
@@ -82,7 +82,7 @@ export default function Agendar() {
             const sel = d === fecha;
             return (
               <Box key={d} component="button" type="button" role="radio" aria-checked={sel} onClick={() => setFecha(d)}
-                sx={{ flex: "0 0 auto", scrollSnapAlign: "start", width: 64, height: 84, borderRadius: 3, cursor: "pointer", font: "inherit", border: "1.5px solid", borderColor: sel ? "primary.main" : "divider", bgcolor: sel ? "primary.main" : "#fff", color: sel ? "#fff" : "text.primary", transition: "all .15s", display: "grid", placeItems: "center", py: 1, "&:focus-visible": { outline: "3px solid #0D47A155", outlineOffset: 2 } }}>
+                sx={{ flex: "0 0 auto", scrollSnapAlign: "start", width: 64, height: 84, borderRadius: "12px", cursor: "pointer", font: "inherit", border: "1.5px solid", borderColor: sel ? "primary.main" : "divider", bgcolor: sel ? "primary.main" : "#fff", color: sel ? "#fff" : "text.primary", transition: "all .15s", display: "grid", placeItems: "center", py: 1, "&:focus-visible": { outline: "3px solid #0D47A155", outlineOffset: 2 } }}>
                 <Box lineHeight={1.15}>
                   <Typography variant="caption" fontWeight={700} textTransform="uppercase" sx={{ opacity: sel ? 0.9 : 0.65 }}>{diaCorto(d)}</Typography>
                   <Typography fontSize="1.5rem" fontWeight={800} lineHeight={1.1}>{diaNum(d)}</Typography>
@@ -109,7 +109,7 @@ export default function Agendar() {
                     <Typography fontWeight={700}>{f.etiqueta}</Typography>
                     <Typography variant="body2" color={sin ? "error" : "text.secondary"}>{sin ? "Sin cupo" : `${f.disponibles} lugar${f.disponibles > 1 ? "es" : ""} disponible${f.disponibles > 1 ? "s" : ""}`}</Typography>
                   </Box>
-                  <LinearProgress variant="determinate" value={100 - (f.disponibles / f.cupo) * 100} sx={{ width: 48, height: 6, borderRadius: 3 }} aria-hidden />
+                  <LinearProgress variant="determinate" value={100 - (f.disponibles / f.cupo) * 100} sx={{ width: 48, height: 6, borderRadius: "12px" }} aria-hidden />
                 </Card>
               );
             })}
@@ -118,7 +118,7 @@ export default function Agendar() {
       )}
 
       {franjaId && (
-        <Paso n={3} titulo="Datos de la recogida">
+        <Paso n={3} titulo="Datos del retiro">
           <Stack spacing={2}>
             <TextField label="Dirección de retiro" value={direccion} required onChange={(e) => setDireccion(e.target.value)} autoComplete="street-address" />
             <TextField label="¿Qué documentos retiramos? (opcional)" value={observaciones} multiline minRows={2} onChange={(e) => setObservaciones(e.target.value)} placeholder="Ej. Facturas y extractos del mes" />

@@ -58,7 +58,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
               const activo = i.href === "/admin" ? path === "/admin" : path.startsWith(i.href);
               return (
                 <ListItemButton key={i.href} component={Link} href={i.href} selected={activo} sx={{
-                  borderRadius: 2.5, mb: 0.5, minHeight: 44, color: "#C5D1EA",
+                  borderRadius: "10px", mb: 0.5, minHeight: 44, color: "#C5D1EA",
                   "& .MuiListItemIcon-root": { color: "inherit", minWidth: 40 },
                   "&:hover": { bgcolor: "rgba(255,255,255,.07)" },
                   "&.Mui-selected": { bgcolor: "rgba(255,255,255,.14)", color: "#fff", boxShadow: "inset 3px 0 0 #60A5FA" },

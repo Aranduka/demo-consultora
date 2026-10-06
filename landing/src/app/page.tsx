@@ -62,17 +62,17 @@ const Titulo = ({ k, t, s }: { k: string; t: string; s?: string }) => (
 
 function Telefono() {
   return (
-    <Box aria-hidden sx={{ width: 270, height: 520, borderRadius: 8, p: 1.25, bgcolor: "#0B1B3A", boxShadow: "0 40px 80px rgba(2,6,23,.45)", transform: { md: "rotate(4deg)" }, mx: "auto" }}>
-      <Box sx={{ height: "100%", borderRadius: 6.5, bgcolor: "#F4F7FB", color: "#0F172A", overflow: "hidden", position: "relative" }}>
-        <Box sx={{ m: 1.5, p: 2, borderRadius: 4, color: "#fff", background: "linear-gradient(145deg,#0D47A1,#1976D2)" }}>
-          <Typography variant="overline" sx={{ opacity: 0.85 }}>Próxima recogida</Typography>
+    <Box aria-hidden sx={{ width: 270, height: 520, borderRadius: "36px", p: 1.25, bgcolor: "#0B1B3A", boxShadow: "0 40px 80px rgba(2,6,23,.45)", transform: { md: "rotate(4deg)" }, mx: "auto" }}>
+      <Box sx={{ height: "100%", borderRadius: "28px", bgcolor: "#F4F7FB", color: "#0F172A", overflow: "hidden", position: "relative" }}>
+        <Box sx={{ m: 1.5, p: 2, borderRadius: "16px", color: "#fff", background: "linear-gradient(145deg,#0D47A1,#1976D2)" }}>
+          <Typography variant="overline" sx={{ opacity: 0.85 }}>Próximo retiro</Typography>
           <Typography fontWeight={800} fontSize="1.1rem">Lunes 12 de octubre</Typography>
           <Typography sx={{ opacity: 0.9 }} fontSize=".9rem">09:00 – 11:00</Typography>
           <Chip size="small" label="Confirmada" sx={{ mt: 1, bgcolor: "#DBEAFE", color: "#1E40AF", fontWeight: 700 }} />
         </Box>
         <Stack spacing={1.25} sx={{ px: 1.5 }}>
           {["Elija el día", "Elija la franja", "Confirme"].map((t, i) => (
-            <Stack key={t} direction="row" spacing={1.25} alignItems="center" sx={{ p: 1.5, bgcolor: "#fff", borderRadius: 3, border: "1px solid #E3E8F0" }}>
+            <Stack key={t} direction="row" spacing={1.25} alignItems="center" sx={{ p: 1.5, bgcolor: "#fff", borderRadius: "12px", border: "1px solid #E3E8F0" }}>
               <Box sx={{ width: 26, height: 26, borderRadius: "50%", bgcolor: "primary.main", color: "#fff", display: "grid", placeItems: "center", fontSize: ".8rem", fontWeight: 800 }}>{i + 1}</Box>
               <Typography fontWeight={600} fontSize=".9rem">{t}</Typography>
             </Stack>
@@ -88,7 +88,7 @@ export default function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Box component="a" href="#contenido" sx={{ position: "absolute", left: -9999, "&:focus": { left: 16, top: 16, zIndex: 100, bgcolor: "#fff", p: 1.5, borderRadius: 2 } }}>Saltar al contenido</Box>
+      <Box component="a" href="#contenido" sx={{ position: "absolute", left: -9999, "&:focus": { left: 16, top: 16, zIndex: 100, bgcolor: "#fff", p: 1.5, borderRadius: "8px" } }}>Saltar al contenido</Box>
 
       <Box component="header" sx={{ position: "sticky", top: 0, zIndex: 50, bgcolor: "rgba(255,255,255,.88)", backdropFilter: "blur(10px)", borderBottom: "1px solid #E3E8F0" }}>
         <Container maxWidth="lg" sx={{ height: 68, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -131,7 +131,7 @@ export default function Home() {
           <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3,1fr)" }, gap: 3 }}>
             {ventajas.map((v) => (
               <Stack key={v.t} direction="row" spacing={2}>
-                <Box sx={{ width: 48, height: 48, flexShrink: 0, borderRadius: 3, bgcolor: "#E8F0FE", color: "primary.main", display: "grid", placeItems: "center" }}>{v.icon}</Box>
+                <Box sx={{ width: 48, height: 48, flexShrink: 0, borderRadius: "12px", bgcolor: "#E8F0FE", color: "primary.main", display: "grid", placeItems: "center" }}>{v.icon}</Box>
                 <Box><Typography fontWeight={700}>{v.t}</Typography><Typography color="text.secondary">{v.d}</Typography></Box>
               </Stack>
             ))}
@@ -172,7 +172,7 @@ export default function Home() {
             {pasos.map((p, i) => (
               <Card key={p.titulo} sx={{ p: 3.5, position: "relative" }}>
                 <Typography sx={{ position: "absolute", top: 16, right: 24, fontSize: "3.5rem", fontWeight: 800, color: "#E8F0FE", lineHeight: 1 }} aria-hidden>{i + 1}</Typography>
-                <Box sx={{ width: 52, height: 52, borderRadius: 3.5, color: "#fff", display: "grid", placeItems: "center", mb: 2.5, background: "linear-gradient(140deg,#1976D2,#0D47A1)" }}>{p.icon}</Box>
+                <Box sx={{ width: 52, height: 52, borderRadius: "14px", color: "#fff", display: "grid", placeItems: "center", mb: 2.5, background: "linear-gradient(140deg,#1976D2,#0D47A1)" }}>{p.icon}</Box>
                 <Typography variant="h6" component="h3" fontWeight={700}>{p.titulo}</Typography>
                 <Typography color="text.secondary" mt={1}>{p.texto}</Typography>
               </Card>
@@ -185,7 +185,7 @@ export default function Home() {
             <Titulo k="PREGUNTAS FRECUENTES" t="Resolvemos sus dudas" />
             <Stack gap={1.5}>
               {faqs.map((f) => (
-                <Box key={f.q} component="details" sx={{ bgcolor: "#fff", border: "1px solid #E3E8F0", borderRadius: 4, px: 3, py: 2, "& summary": { cursor: "pointer", fontWeight: 700, listStyle: "none", display: "flex", justifyContent: "space-between", gap: 2, minHeight: 28 }, "& summary::-webkit-details-marker": { display: "none" }, "& summary::after": { content: '"+"', color: "#0D47A1", fontSize: "1.4rem", lineHeight: 1 }, "&[open] summary::after": { content: '"–"' }, "&:focus-within": { borderColor: "#0D47A1" } }}>
+                <Box key={f.q} component="details" sx={{ bgcolor: "#fff", border: "1px solid #E3E8F0", borderRadius: "16px", px: 3, py: 2, "& summary": { cursor: "pointer", fontWeight: 700, listStyle: "none", display: "flex", justifyContent: "space-between", gap: 2, minHeight: 28 }, "& summary::-webkit-details-marker": { display: "none" }, "& summary::after": { content: '"+"', color: "#0D47A1", fontSize: "1.4rem", lineHeight: 1 }, "&[open] summary::after": { content: '"–"' }, "&:focus-within": { borderColor: "#0D47A1" } }}>
                   <summary>{f.q}</summary>
                   <Typography color="text.secondary" mt={1.5}>{f.a}</Typography>
                 </Box>
@@ -195,8 +195,8 @@ export default function Home() {
         </Box>
 
         <Container maxWidth="lg" sx={{ py: { xs: 6, md: 9 } }}>
-          <Box sx={{ borderRadius: 6, p: { xs: 4, md: 8 }, textAlign: "center", color: "#fff", background: "linear-gradient(155deg,#0B1B3A,#0D47A1)" }}>
-            <Typography variant="h3" component="h2" fontWeight={800} letterSpacing="-0.03em" sx={{ fontSize: { xs: "1.8rem", md: "2.5rem" } }}>¿Ya es cliente? Agende su próxima recogida.</Typography>
+          <Box sx={{ borderRadius: "24px", p: { xs: 4, md: 8 }, textAlign: "center", color: "#fff", background: "linear-gradient(155deg,#0B1B3A,#0D47A1)" }}>
+            <Typography variant="h3" component="h2" fontWeight={800} letterSpacing="-0.03em" sx={{ fontSize: { xs: "1.8rem", md: "2.5rem" } }}>¿Ya es cliente? Agende su próximo retiro.</Typography>
             <Typography sx={{ opacity: 0.85, mt: 1.5 }}>Ingrese a la app y reserve día y horario en menos de un minuto.</Typography>
             <Button href={LOGIN_URL} size="large" endIcon={<ArrowForwardIcon />} sx={{ mt: 4, bgcolor: "#fff", color: "primary.main", px: 4, "&:hover": { bgcolor: "#E8F0FE" } }}>Ingresar</Button>
           </Box>

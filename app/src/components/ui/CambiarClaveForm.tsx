@@ -39,7 +39,7 @@ export default function CambiarClaveForm({ obligatorio = false, destino = "/clie
         <CardContent sx={{ p: 3 }}>
           <Stack spacing={2.5} component="form" onSubmit={onSubmit}>
             <Stack direction="row" spacing={1.5} alignItems="center">
-              <Box sx={{ width: 44, height: 44, borderRadius: 3, bgcolor: "#E8F0FE", color: "primary.main", display: "grid", placeItems: "center" }}><LockIcon /></Box>
+              <Box sx={{ width: 44, height: 44, borderRadius: "12px", bgcolor: "#E8F0FE", color: "primary.main", display: "grid", placeItems: "center" }}><LockIcon /></Box>
               <Typography variant="h6" component="h1">{obligatorio ? "Cree su nueva contraseña" : "Cambiar contraseña"}</Typography>
             </Stack>
             {obligatorio && <Alert severity="info">Por seguridad, reemplace la contraseña temporal para continuar.</Alert>}

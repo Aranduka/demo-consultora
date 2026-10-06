@@ -15,7 +15,7 @@ function Atajo({ href, icon, label, hint }: { href: string; icon: ReactNode; lab
   return (
     <Card>
       <CardActionArea component={Link} href={href} sx={{ p: 2, minHeight: 108 }}>
-        <Box sx={{ width: 40, height: 40, borderRadius: 2.5, bgcolor: "#E8F0FE", color: "primary.main", display: "grid", placeItems: "center", mb: 1 }}>{icon}</Box>
+        <Box sx={{ width: 40, height: 40, borderRadius: "10px", bgcolor: "#E8F0FE", color: "primary.main", display: "grid", placeItems: "center", mb: 1 }}>{icon}</Box>
         <Typography fontWeight={700}>{label}</Typography>
         <Typography variant="body2" color="text.secondary">{hint}</Typography>
       </CardActionArea>
@@ -40,8 +40,8 @@ export default function Inicio() {
         {perfil ? <Typography variant="h5" component="h1">{perfil.nombre}</Typography> : <Skeleton width={200} height={36} />}
       </Box>
 
-      <Box sx={{ p: 2.5, borderRadius: 5, color: "#fff", background: "linear-gradient(145deg,#0D47A1,#1976D2)", boxShadow: "0 12px 28px rgba(13,71,161,.3)" }}>
-        <Typography variant="overline" sx={{ opacity: 0.85, fontWeight: 700 }}>Próxima recogida</Typography>
+      <Box sx={{ p: 2.5, borderRadius: "20px", color: "#fff", background: "linear-gradient(145deg,#0D47A1,#1976D2)", boxShadow: "0 12px 28px rgba(13,71,161,.3)" }}>
+        <Typography variant="overline" sx={{ opacity: 0.85, fontWeight: 700 }}>Próximo retiro</Typography>
         {visitas === null ? <Skeleton sx={{ bgcolor: "rgba(255,255,255,.25)" }} height={64} /> : proxima ? (
           <Stack direction="row" spacing={2} alignItems="center" mt={0.5}>
             <FechaBloque iso={proxima.fecha} inverso />
@@ -58,7 +58,7 @@ export default function Inicio() {
           </Box>
         )}
         <Button component={Link} href="/cliente/agendar" fullWidth size="large" startIcon={<EventAvailableIcon />} sx={{ mt: 2, bgcolor: "#fff", color: "primary.main", "&:hover": { bgcolor: "#E8F0FE" } }}>
-          Agendar recogida
+          Agendar retiro
         </Button>
       </Box>
 

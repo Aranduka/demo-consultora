@@ -26,7 +26,7 @@ function Stat({ label, value, icon, href, tone }: { label: string; value?: numbe
               <Typography color="text.secondary" fontWeight={600}>{label}</Typography>
               {value === undefined ? <Skeleton width={56} height={52} /> : <Typography variant="h3" fontWeight={800} letterSpacing="-0.03em">{value}</Typography>}
             </Box>
-            <Box sx={{ width: 48, height: 48, borderRadius: 3, display: "grid", placeItems: "center", bgcolor: `${tone}18`, color: tone }}>{icon}</Box>
+            <Box sx={{ width: 48, height: 48, borderRadius: "12px", display: "grid", placeItems: "center", bgcolor: `${tone}18`, color: tone }}>{icon}</Box>
           </Stack>
         </CardContent>
       </CardActionArea>
@@ -60,9 +60,9 @@ export default function Dashboard() {
       </Box>
       <Card>
         <CardContent sx={{ p: 3 }}>
-          <Typography variant="h6" mb={1}>Recogidas de hoy</Typography>
+          <Typography variant="h6" mb={1}>Retiros de hoy</Typography>
           {hoy === null && <Skeleton variant="rounded" height={64} />}
-          {hoy?.length === 0 && <EmptyState icon={<EventAvailableIcon />} title="Sin recogidas para hoy" text="Cuando haya visitas pendientes o confirmadas para hoy aparecerán aquí." />}
+          {hoy?.length === 0 && <EmptyState icon={<EventAvailableIcon />} title="Sin retiros para hoy" text="Cuando haya visitas pendientes o confirmadas para hoy aparecerán aquí." />}
           <Stack divider={<Box sx={{ borderTop: "1px solid", borderColor: "divider" }} />}>
             {hoy?.map((v) => (
               <Stack key={v.id} direction="row" alignItems="center" spacing={2} sx={{ py: 1.5 }}>

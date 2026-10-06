@@ -40,7 +40,7 @@ export default function Ruta() {
       />
       {error && <Alert severity="error">{error}</Alert>}
       {visitas === null && <Skeleton variant="rounded" height={120} />}
-      {visitas?.length === 0 && <Card><EmptyState icon={<EventAvailableIcon />} title="Sin recogidas para esta fecha" text="Elija otra fecha o espere nuevas solicitudes de los clientes." /></Card>}
+      {visitas?.length === 0 && <Card><EmptyState icon={<EventAvailableIcon />} title="Sin retiros para esta fecha" text="Elija otra fecha o espere nuevas solicitudes de los clientes." /></Card>}
       {[...grupos].map(([nombre, items]) => (
         <Box key={nombre} mb={4} sx={{ breakInside: "avoid" }}>
           <Stack direction="row" alignItems="center" spacing={1.5} mb={1.5}>

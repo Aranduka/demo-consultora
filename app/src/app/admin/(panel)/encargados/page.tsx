@@ -5,7 +5,7 @@ import ActivoChip from "@/components/admin/ActivoChip";
 export default function Encargados() {
   return (
     <CrudPage
-      title="Encargados de recogida"
+      title="Encargados de retiro"
       subtitle="Personas que retiran los documentos."
       singular="encargado"
       endpoint="/api/admin/encargados"

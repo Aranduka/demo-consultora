@@ -1,6 +1,6 @@
 # Consultora Contable (DEMO)
 
-Panel admin de escritorio + PWA de clientes para agendar la recogida de documentos + landing pública. Todo en Docker.
+Panel admin de escritorio + PWA de clientes para agendar el retiro de documentos + landing pública. Todo en Docker.
 
 | Carpeta    | Descripción                                                          | URL local               |
 |------------|----------------------------------------------------------------------|-------------------------|

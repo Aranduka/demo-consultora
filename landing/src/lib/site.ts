@@ -1,6 +1,6 @@
 export const SITE = {
   nombre: "Consultora Contable",
-  descripcion: "Servicios contables, impuestos y asesoría para empresas y profesionales. Agende la recogida de sus documentos desde su celular.",
+  descripcion: "Servicios contables, impuestos y asesoría para empresas y profesionales. Agende el retiro de sus documentos desde su celular.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:13002",
   appUrl: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:13000",
   telefono: "+595 21 000 000",

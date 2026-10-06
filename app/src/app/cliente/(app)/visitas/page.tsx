@@ -40,13 +40,13 @@ function Lista() {
       <Typography variant="h5" component="h1">Mis visitas</Typography>
       {ok && <Alert severity="success" icon={<EventAvailableIcon />}>¡Solicitud enviada! Le confirmaremos la visita a la brevedad.</Alert>}
       {error && <Alert severity="error" onClose={() => setError("")}>{error}</Alert>}
-      <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="fullWidth" sx={{ bgcolor: "#E8EEF6", borderRadius: 3, p: 0.5, minHeight: 44, "& .MuiTabs-indicator": { display: "none" }, "& .MuiTab-root": { borderRadius: 2.5, minHeight: 40 }, "& .Mui-selected": { bgcolor: "#fff", boxShadow: "0 1px 4px rgba(15,23,42,.12)" } }}>
+      <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="fullWidth" sx={{ bgcolor: "#E8EEF6", borderRadius: "12px", p: 0.5, minHeight: 44, "& .MuiTabs-indicator": { display: "none" }, "& .MuiTab-root": { borderRadius: "10px", minHeight: 40 }, "& .Mui-selected": { bgcolor: "#fff", boxShadow: "0 1px 4px rgba(15,23,42,.12)" } }}>
         <Tab label="Próximas" />
         <Tab label="Historial" />
       </Tabs>
       {rows === null && [0, 1].map((i) => <Skeleton key={i} variant="rounded" height={104} />)}
       {lista?.length === 0 && (
-        <EmptyState icon={<EventAvailableIcon />} title={tab === 0 ? "No tiene visitas próximas" : "Sin historial todavía"} text={tab === 0 ? "Agende la recogida de sus documentos en unos pasos." : "Aquí verá sus visitas completadas y canceladas."}
+        <EmptyState icon={<EventAvailableIcon />} title={tab === 0 ? "No tiene visitas próximas" : "Sin historial todavía"} text={tab === 0 ? "Agende el retiro de sus documentos en unos pasos." : "Aquí verá sus visitas completadas y canceladas."}
           action={tab === 0 ? <Button component={Link} href="/cliente/agendar" variant="contained">Agendar ahora</Button> : undefined} />
       )}
       {lista?.map((v) => (
