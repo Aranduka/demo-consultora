@@ -9,3 +9,4 @@ db/data/
 
 landing/out/
 landing/.next/
+*.tsbuildinfo
