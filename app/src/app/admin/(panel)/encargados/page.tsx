@@ -6,6 +6,7 @@ export default function Encargados() {
   return (
     <CrudPage
       title="Encargados de recogida"
+      subtitle="Personas que retiran los documentos."
       singular="encargado"
       endpoint="/api/admin/encargados"
       defaults={{ activo: true }}

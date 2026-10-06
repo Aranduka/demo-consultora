@@ -6,6 +6,7 @@ export default function Franjas() {
   return (
     <CrudPage
       title="Franjas horarias"
+      subtitle="Horarios disponibles y cupo de visitas por día."
       singular="franja"
       endpoint="/api/admin/franjas"
       defaults={{ activa: true, cupo: 5 }}

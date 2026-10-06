@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip, IconButton, Typography } from "@mui/material";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import CrudPage from "@/components/admin/CrudPage";
 import ActivoChip from "@/components/admin/ActivoChip";
@@ -8,11 +9,13 @@ import { api } from "@/lib/http";
 
 export default function Clientes() {
   const [clave, setClave] = useState<{ email: string; clave: string } | null>(null);
+  const [reset, setReset] = useState<any | null>(null);
 
   return (
     <>
       <CrudPage
         title="Clientes"
+        subtitle="Cada cliente es también un usuario de la app."
         singular="cliente"
         endpoint="/api/admin/clientes"
         defaults={{ activo: true }}
@@ -38,16 +41,24 @@ export default function Clientes() {
           <Tooltip title="Restablecer contraseña">
             <IconButton
               size="small"
-              onClick={async () => {
-                if (!confirm(`¿Generar una nueva contraseña temporal para ${r.nombre}?`)) return;
-                const d = await api("/api/admin/clientes/" + r.id + "/reset-clave", { method: "POST" });
-                setClave({ email: r.email, clave: d.claveTemporal });
-              }}
+              aria-label="Restablecer contraseña"
+              onClick={() => setReset(r)}
             >
               <LockResetIcon fontSize="small" />
             </IconButton>
           </Tooltip>
         )}
+      />
+      <ConfirmDialog
+        open={!!reset}
+        title="¿Restablecer contraseña?"
+        text={`Se generará una nueva contraseña temporal para ${reset?.nombre}. La anterior dejará de funcionar.`}
+        confirmLabel="Generar"
+        onClose={() => setReset(null)}
+        onConfirm={async () => {
+          const d = await api("/api/admin/clientes/" + reset.id + "/reset-clave", { method: "POST" });
+          setClave({ email: reset.email, clave: d.claveTemporal });
+        }}
       />
       <Dialog open={!!clave} onClose={() => setClave(null)}>
         <DialogTitle>Contraseña temporal</DialogTitle>

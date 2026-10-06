@@ -31,7 +31,7 @@ Orquestación: `docker-compose.yml`. Nunca instalar ni ejecutar nada fuera de Do
 
 ## Diseño (Material Design, azul y blanco contable)
 - Primary `#0D47A1` (dark `#002171`, light `#5472D3`), secondary `#1976D2`, fondo `#FFFFFF`/`#F5F8FC`, texto `#1A2433`, éxito `#2E7D32`, error `#C62828`.
-- Tipografía Roboto, esquinas redondeadas 8px, elevación sutil. Un único tema compartido en `app/src/lib/theme.ts` y replicado en `landing`.
+- Tipografía Plus Jakarta Sans (vía `next/font`), esquinas redondeadas 12–16px, elevación sutil, objetivos táctiles ≥44px, foco visible y `prefers-reduced-motion` respetado. Guía de diseño: skill `ui-ux-pro-max` (`.claude/skills/ui-ux-pro-max/ORIGEN.md`). Un único tema compartido en `app/src/lib/theme.ts` y replicado en `landing`.
 - PWA: mobile-first, bottom navigation, botones grandes. Admin: layout de escritorio con Drawer lateral + tablas (`DataGrid` o `Table`) + diálogos. Landing: hero, catálogo por categorías con precios, CTA "Ingresar" → `${NEXT_PUBLIC_APP_URL}/cliente/login`.
 - Accesibilidad: contraste AA, labels en todos los campos, estados vacíos/carga/error.
 

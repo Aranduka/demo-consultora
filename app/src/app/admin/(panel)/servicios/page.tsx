@@ -15,6 +15,7 @@ function Servicios() {
   return (
     <CrudPage
       title="Servicios y precios"
+      subtitle="Catálogo visible para clientes y en la landing."
       singular="servicio"
       endpoint="/api/admin/servicios"
       defaults={{ activo: true, moneda: "PYG" }}

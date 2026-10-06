@@ -1,16 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Alert, Box, Button, Card, CardContent, Chip, Divider, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Avatar, Box, Button, Card, Chip, Skeleton, Stack, TextField, Typography } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
-import PlaceIcon from "@mui/icons-material/Place";
-import PhoneIcon from "@mui/icons-material/Phone";
+import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
+import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import PageHeader from "@/components/ui/PageHeader";
+import EmptyState from "@/components/ui/EmptyState";
+import StatusChip from "@/components/ui/StatusChip";
 import { api } from "@/lib/http";
-import { diaLargo, ESTADOS } from "@/lib/format";
-
-const hoy = () => new Intl.DateTimeFormat("en-CA", { timeZone: "America/Asuncion" }).format(new Date());
+import { diaLargo, hoyAsu } from "@/lib/format";
 
 export default function Ruta() {
-  const [fecha, setFecha] = useState(hoy());
+  const [fecha, setFecha] = useState(hoyAsu());
   const [visitas, setVisitas] = useState<any[] | null>(null);
   const [error, setError] = useState("");
 
@@ -27,34 +30,36 @@ export default function Ruta() {
 
   return (
     <Box>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2} flexWrap="wrap" gap={2}>
-        <Box>
-          <Typography variant="h5" fontWeight={500}>Hoja de ruta</Typography>
-          <Typography color="text.secondary" textTransform="capitalize">{diaLargo(fecha)} · {visitas?.length ?? 0} visita(s)</Typography>
-        </Box>
-        <Stack direction="row" gap={1} className="no-print">
-          <TextField type="date" size="small" value={fecha} onChange={(e) => setFecha(e.target.value)} sx={{ width: 180 }} />
+      <PageHeader
+        title="Hoja de ruta"
+        subtitle={<span>{diaLargo(fecha)} · {visitas?.length ?? 0} visita(s)</span>}
+        actions={<>
+          <TextField type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} sx={{ width: 180 }} slotProps={{ htmlInput: { "aria-label": "Fecha" } }} />
           <Button variant="contained" startIcon={<PrintIcon />} onClick={() => window.print()}>Imprimir</Button>
-        </Stack>
-      </Stack>
+        </>}
+      />
       {error && <Alert severity="error">{error}</Alert>}
-      {visitas?.length === 0 && <Alert severity="info">No hay visitas para esta fecha.</Alert>}
+      {visitas === null && <Skeleton variant="rounded" height={120} />}
+      {visitas?.length === 0 && <Card><EmptyState icon={<EventAvailableIcon />} title="Sin recogidas para esta fecha" text="Elija otra fecha o espere nuevas solicitudes de los clientes." /></Card>}
       {[...grupos].map(([nombre, items]) => (
-        <Box key={nombre} mb={3} sx={{ breakInside: "avoid" }}>
-          <Typography variant="h6" color="primary" mb={1}>{nombre}</Typography>
+        <Box key={nombre} mb={4} sx={{ breakInside: "avoid" }}>
+          <Stack direction="row" alignItems="center" spacing={1.5} mb={1.5}>
+            <Avatar sx={{ bgcolor: "primary.main", width: 36, height: 36, fontSize: 15 }}>{nombre[0]}</Avatar>
+            <Typography variant="h6">{nombre}</Typography>
+            <Chip size="small" label={`${items.length} parada${items.length > 1 ? "s" : ""}`} />
+          </Stack>
           <Stack gap={1.5}>
-            {items.map((v) => (
-              <Card key={v.id} variant="outlined">
-                <CardContent sx={{ display: "grid", gridTemplateColumns: "140px 1fr auto", gap: 2, alignItems: "center", "&:last-child": { pb: 2 } }}>
-                  <Typography variant="subtitle1" fontWeight={600}>{v.franja.etiqueta}</Typography>
-                  <Box>
-                    <Typography fontWeight={500}>{v.cliente.nombre}</Typography>
-                    <Stack direction="row" gap={0.5} alignItems="center" color="text.secondary"><PlaceIcon fontSize="small" />{v.direccion}</Stack>
-                    <Stack direction="row" gap={0.5} alignItems="center" color="text.secondary"><PhoneIcon fontSize="small" />{v.cliente.telefono}</Stack>
-                    {v.observaciones && <><Divider sx={{ my: 0.5 }} /><Typography variant="body2">Documentos: {v.observaciones}</Typography></>}
-                  </Box>
-                  <Chip size="small" label={ESTADOS[v.estado as keyof typeof ESTADOS].label} color={ESTADOS[v.estado as keyof typeof ESTADOS].color} />
-                </CardContent>
+            {items.map((v, i) => (
+              <Card key={v.id} sx={{ display: "grid", gridTemplateColumns: "56px 150px 1fr auto", alignItems: "center", gap: 2, p: 2 }}>
+                <Box sx={{ width: 40, height: 40, borderRadius: "50%", bgcolor: "#E8F0FE", color: "primary.main", display: "grid", placeItems: "center", fontWeight: 800 }}>{i + 1}</Box>
+                <Typography fontWeight={700} color="primary">{v.franja.etiqueta}</Typography>
+                <Box>
+                  <Typography fontWeight={700}>{v.cliente.nombre}</Typography>
+                  <Stack direction="row" gap={0.75} alignItems="center" color="text.secondary"><PlaceOutlinedIcon fontSize="small" />{v.direccion}</Stack>
+                  <Stack direction="row" gap={0.75} alignItems="center" color="text.secondary"><PhoneOutlinedIcon fontSize="small" />{v.cliente.telefono}</Stack>
+                  {v.observaciones && <Stack direction="row" gap={0.75} alignItems="center" mt={0.5}><DescriptionOutlinedIcon fontSize="small" color="action" /><Typography variant="body2">{v.observaciones}</Typography></Stack>}
+                </Box>
+                <StatusChip estado={v.estado} />
               </Card>
             ))}
           </Stack>

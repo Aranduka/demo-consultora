@@ -2,26 +2,32 @@
 import { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AppBar, Box, Drawer, GlobalStyles, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PeopleIcon from "@mui/icons-material/People";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import BadgeIcon from "@mui/icons-material/Badge";
-import ScheduleIcon from "@mui/icons-material/Schedule";
-import EventIcon from "@mui/icons-material/Event";
-import RouteIcon from "@mui/icons-material/Route";
+import { Avatar, Box, Chip, Drawer, GlobalStyles, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import DashboardIcon from "@mui/icons-material/SpaceDashboardOutlined";
+import PeopleIcon from "@mui/icons-material/PeopleAltOutlined";
+import LocalOfferIcon from "@mui/icons-material/LocalOfferOutlined";
+import BadgeIcon from "@mui/icons-material/BadgeOutlined";
+import ScheduleIcon from "@mui/icons-material/ScheduleOutlined";
+import EventIcon from "@mui/icons-material/EventNoteOutlined";
+import RouteIcon from "@mui/icons-material/AltRouteOutlined";
 import DesktopWindowsIcon from "@mui/icons-material/DesktopWindows";
+import Brand from "@/components/ui/Brand";
 import LogoutButton from "@/components/ui/LogoutButton";
+import { diaLargo, hoyAsu } from "@/lib/format";
 
-const W = 240;
-const items = [
-  { href: "/admin", label: "Inicio", icon: <DashboardIcon /> },
-  { href: "/admin/ruta", label: "Hoja de ruta", icon: <RouteIcon /> },
-  { href: "/admin/visitas", label: "Visitas", icon: <EventIcon /> },
-  { href: "/admin/clientes", label: "Clientes", icon: <PeopleIcon /> },
-  { href: "/admin/servicios", label: "Servicios y precios", icon: <LocalOfferIcon /> },
-  { href: "/admin/encargados", label: "Encargados", icon: <BadgeIcon /> },
-  { href: "/admin/franjas", label: "Franjas horarias", icon: <ScheduleIcon /> },
+const W = 288;
+const grupos = [
+  { titulo: "Operación", items: [
+    { href: "/admin", label: "Inicio", icon: <DashboardIcon /> },
+    { href: "/admin/ruta", label: "Hoja de ruta", icon: <RouteIcon /> },
+    { href: "/admin/visitas", label: "Visitas", icon: <EventIcon /> },
+  ] },
+  { titulo: "Gestión", items: [
+    { href: "/admin/clientes", label: "Clientes", icon: <PeopleIcon /> },
+    { href: "/admin/servicios", label: "Servicios y precios", icon: <LocalOfferIcon /> },
+    { href: "/admin/encargados", label: "Encargados", icon: <BadgeIcon /> },
+    { href: "/admin/franjas", label: "Franjas horarias", icon: <ScheduleIcon /> },
+  ] },
 ];
 
 export default function AdminShell({ children }: { children: ReactNode }) {
@@ -33,37 +39,49 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   if (esMovil)
     return (
       <Box sx={{ minHeight: "100dvh", display: "grid", placeItems: "center", p: 3, textAlign: "center" }}>
-        <Box>
-          <DesktopWindowsIcon color="primary" sx={{ fontSize: 64 }} />
-          <Typography variant="h6" mt={1}>Usar desde un ordenador</Typography>
+        <Stack alignItems="center" spacing={1.5} maxWidth={360}>
+          <Box sx={{ width: 80, height: 80, borderRadius: "50%", bgcolor: "#E8F0FE", color: "primary.main", display: "grid", placeItems: "center" }}><DesktopWindowsIcon sx={{ fontSize: 40 }} /></Box>
+          <Typography variant="h5">Usar desde un ordenador</Typography>
           <Typography color="text.secondary">El panel de administración está disponible únicamente en pantallas de escritorio.</Typography>
-        </Box>
+        </Stack>
       </Box>
     );
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", minHeight: "100dvh" }}>
       <GlobalStyles styles={{ "@media print": { ".no-print": { display: "none !important" }, main: { margin: "0 !important", padding: "0 !important" } } }} />
-      <AppBar position="fixed" className="no-print" sx={{ zIndex: (t) => t.zIndex.drawer + 1 }}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>Consultora Contable · Administración</Typography>
-          <LogoutButton to="/admin/login" variant="text" />
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" className="no-print" sx={{ width: W, "& .MuiDrawer-paper": { width: W, boxSizing: "border-box" } }}>
-        <Toolbar />
-        <List>
-          {items.map((i) => (
-            <ListItemButton key={i.href} component={Link} href={i.href} selected={i.href === "/admin" ? path === "/admin" : path.startsWith(i.href)}>
-              <ListItemIcon>{i.icon}</ListItemIcon>
-              <ListItemText primary={i.label} />
-            </ListItemButton>
-          ))}
-        </List>
+      <Drawer variant="permanent" className="no-print" sx={{ width: W, flexShrink: 0, "& .MuiDrawer-paper": { width: W, boxSizing: "border-box", bgcolor: "#0B1B3A", color: "#fff", border: 0, p: 2 } }}>
+        <Box sx={{ px: 1, py: 1.5, mb: 1 }}><Brand light /></Box>
+        {grupos.map((g) => (
+          <List key={g.titulo} dense disablePadding subheader={<ListSubheader disableSticky sx={{ bgcolor: "transparent", color: "#8FA3C8", fontWeight: 700, fontSize: ".7rem", letterSpacing: ".08em", textTransform: "uppercase", lineHeight: "32px", mt: 1.5 }}>{g.titulo}</ListSubheader>}>
+            {g.items.map((i) => {
+              const activo = i.href === "/admin" ? path === "/admin" : path.startsWith(i.href);
+              return (
+                <ListItemButton key={i.href} component={Link} href={i.href} selected={activo} sx={{
+                  borderRadius: 2.5, mb: 0.5, minHeight: 44, color: "#C5D1EA",
+                  "& .MuiListItemIcon-root": { color: "inherit", minWidth: 40 },
+                  "&:hover": { bgcolor: "rgba(255,255,255,.07)" },
+                  "&.Mui-selected": { bgcolor: "rgba(255,255,255,.14)", color: "#fff", boxShadow: "inset 3px 0 0 #60A5FA" },
+                  "&.Mui-selected:hover": { bgcolor: "rgba(255,255,255,.18)" },
+                }}>
+                  <ListItemIcon>{i.icon}</ListItemIcon>
+                  <ListItemText primary={i.label} slotProps={{ primary: { fontWeight: activo ? 700 : 500 } }} />
+                </ListItemButton>
+              );
+            })}
+          </List>
+        ))}
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3, minWidth: 0 }}>
-        <Toolbar className="no-print" />
-        {children}
+
+      <Box sx={{ flexGrow: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+        <Box component="header" className="no-print" sx={{ position: "sticky", top: 0, zIndex: 10, bgcolor: "rgba(255,255,255,.85)", backdropFilter: "blur(8px)", borderBottom: "1px solid", borderColor: "divider", px: 4, height: 64, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Typography color="text.secondary">{diaLargo(hoyAsu())}</Typography>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Chip avatar={<Avatar sx={{ bgcolor: "primary.main !important", color: "#fff !important" }}>A</Avatar>} label="Administrador" variant="outlined" />
+            <LogoutButton to="/admin/login" variant="text" />
+          </Stack>
+        </Box>
+        <Box component="main" sx={{ p: 4, maxWidth: 1400, width: "100%", mx: "auto" }}>{children}</Box>
       </Box>
     </Box>
   );

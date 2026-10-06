@@ -1,12 +1,17 @@
 "use client";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, IconButton, MenuItem, Paper, Stack, Switch,
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography,
+  Alert, Box, Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, IconButton, InputAdornment, MenuItem, Skeleton,
+  Snackbar, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import SearchIcon from "@mui/icons-material/Search";
+import InboxIcon from "@mui/icons-material/Inbox";
+import PageHeader from "@/components/ui/PageHeader";
+import EmptyState from "@/components/ui/EmptyState";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { api } from "@/lib/http";
 
 export type Field = {
@@ -18,10 +23,11 @@ export type Field = {
   help?: string;
   half?: boolean;
 };
-export type Column = { label: string; render: (row: any) => ReactNode };
+export type Column = { label: string; render: (row: any) => ReactNode; search?: (row: any) => string };
 
 type Props = {
   title: string;
+  subtitle?: string;
   singular: string;
   endpoint: string;
   columns: Column[];
@@ -32,19 +38,29 @@ type Props = {
   onSaved?: (data: any, mode: "create" | "edit") => void;
 };
 
-export default function CrudPage({ title, singular, endpoint, columns, fields, defaults = {}, canDelete = true, actions, onSaved }: Props) {
+export default function CrudPage({ title, subtitle, singular, endpoint, columns, fields, defaults = {}, canDelete = true, actions, onSaved }: Props) {
   const [rows, setRows] = useState<any[] | null>(null);
   const [error, setError] = useState("");
+  const [toast, setToast] = useState("");
+  const [q, setQ] = useState("");
   const [editing, setEditing] = useState<any | null>(null); // null cerrado, {} nuevo
   const [form, setForm] = useState<Record<string, any>>({});
   const [errs, setErrs] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [aBorrar, setABorrar] = useState<any | null>(null);
 
   const load = useCallback(() => {
     api<any[]>(endpoint).then(setRows).catch((e) => setError(e.message));
   }, [endpoint]);
   useEffect(load, [load]);
+
+  const visibles = useMemo(() => {
+    if (!rows) return null;
+    const t = q.trim().toLowerCase();
+    if (!t) return rows;
+    return rows.filter((r) => JSON.stringify(Object.values(r)).toLowerCase().includes(t) || columns.some((c) => c.search?.(r).toLowerCase().includes(t)));
+  }, [rows, q, columns]);
 
   const open = (row?: any) => {
     setForm(row ? { ...row } : { ...defaults });
@@ -69,6 +85,7 @@ export default function CrudPage({ title, singular, endpoint, columns, fields, d
       const data = await api(isEdit ? `${endpoint}/${editing.id}` : endpoint, { method: isEdit ? "PUT" : "POST", body });
       setEditing(null);
       load();
+      setToast(isEdit ? "Cambios guardados" : `${singular[0].toUpperCase()}${singular.slice(1)} creado`);
       onSaved?.(data, isEdit ? "edit" : "create");
     } catch (e: any) {
       setErrs(e.fields ?? {});
@@ -79,10 +96,10 @@ export default function CrudPage({ title, singular, endpoint, columns, fields, d
   }
 
   async function remove(row: any) {
-    if (!confirm(`¿Eliminar este registro de ${singular}?`)) return;
     try {
       await api(`${endpoint}/${row.id}`, { method: "DELETE" });
       load();
+      setToast("Registro eliminado");
     } catch (e: any) {
       setError(e.message);
     }
@@ -90,38 +107,50 @@ export default function CrudPage({ title, singular, endpoint, columns, fields, d
 
   return (
     <Box>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
-        <Typography variant="h5" fontWeight={500}>{title}</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => open()}>Nuevo {singular}</Button>
-      </Stack>
+      <PageHeader
+        title={title}
+        subtitle={subtitle}
+        actions={<Button variant="contained" startIcon={<AddIcon />} onClick={() => open()}>Nuevo {singular}</Button>}
+      />
       {error && <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError("")}>{error}</Alert>}
-      <TableContainer component={Paper}>
-        <Table size="small">
-          <TableHead>
-            <TableRow sx={{ "& th": { fontWeight: 600, bgcolor: "#E8EEF8" } }}>
-              {columns.map((c) => <TableCell key={c.label}>{c.label}</TableCell>)}
-              <TableCell align="right">Acciones</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows === null && <TableRow><TableCell colSpan={columns.length + 1}>Cargando…</TableCell></TableRow>}
-            {rows?.length === 0 && <TableRow><TableCell colSpan={columns.length + 1} align="center" sx={{ py: 4, color: "text.secondary" }}>Sin registros todavía</TableCell></TableRow>}
-            {rows?.map((r) => (
-              <TableRow key={r.id} hover>
-                {columns.map((c) => <TableCell key={c.label}>{c.render(r)}</TableCell>)}
-                <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
-                  {actions?.(r, load)}
-                  <Tooltip title="Editar"><IconButton size="small" onClick={() => open(r)}><EditIcon fontSize="small" /></IconButton></Tooltip>
-                  {canDelete && <Tooltip title="Eliminar"><IconButton size="small" color="error" onClick={() => remove(r)}><DeleteIcon fontSize="small" /></IconButton></Tooltip>}
-                </TableCell>
+      <Card>
+        <Box sx={{ p: 2, borderBottom: "1px solid", borderColor: "divider" }}>
+          <TextField
+            placeholder="Buscar…" value={q} onChange={(e) => setQ(e.target.value)} sx={{ maxWidth: 360 }}
+            slotProps={{ input: { startAdornment: <InputAdornment position="start"><SearchIcon fontSize="small" /></InputAdornment> }, htmlInput: { "aria-label": "Buscar" } }}
+          />
+        </Box>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {columns.map((c) => <TableCell key={c.label}>{c.label}</TableCell>)}
+                <TableCell align="right">Acciones</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {visibles === null && [0, 1, 2].map((i) => <TableRow key={i}><TableCell colSpan={columns.length + 1}><Skeleton height={28} /></TableCell></TableRow>)}
+              {visibles?.map((r) => (
+                <TableRow key={r.id} hover>
+                  {columns.map((c) => <TableCell key={c.label}>{c.render(r)}</TableCell>)}
+                  <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
+                    {actions?.(r, load)}
+                    <Tooltip title="Editar"><IconButton aria-label="Editar" onClick={() => open(r)}><EditOutlinedIcon fontSize="small" /></IconButton></Tooltip>
+                    {canDelete && <Tooltip title="Eliminar"><IconButton aria-label="Eliminar" color="error" onClick={() => setABorrar(r)}><DeleteOutlineIcon fontSize="small" /></IconButton></Tooltip>}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {visibles?.length === 0 && (
+          <EmptyState icon={<InboxIcon />} title={q ? "Sin resultados" : `Aún no hay ${singular}s`} text={q ? "Pruebe con otra búsqueda." : `Cree el primer ${singular} para comenzar.`}
+            action={!q ? <Button variant="contained" startIcon={<AddIcon />} onClick={() => open()}>Nuevo {singular}</Button> : undefined} />
+        )}
+      </Card>
 
       <Dialog open={editing !== null} onClose={() => setEditing(null)} fullWidth maxWidth="sm">
-        <DialogTitle>{editing?.id !== undefined ? "Editar" : "Nuevo"} {singular}</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 700 }}>{editing?.id !== undefined ? "Editar" : "Nuevo"} {singular}</DialogTitle>
         <DialogContent>
           <Stack direction="row" flexWrap="wrap" gap={2} sx={{ pt: 1 }}>
             {formError && <Alert severity="error" sx={{ width: "100%" }}>{formError}</Alert>}
@@ -154,11 +183,14 @@ export default function CrudPage({ title, singular, endpoint, columns, fields, d
             })}
           </Stack>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setEditing(null)}>Cancelar</Button>
-          <Button variant="contained" onClick={save} disabled={saving}>Guardar</Button>
+        <DialogActions sx={{ p: 2.5, pt: 1 }}>
+          <Button color="inherit" onClick={() => setEditing(null)}>Cancelar</Button>
+          <Button variant="contained" onClick={save} disabled={saving}>{saving ? "Guardando…" : "Guardar"}</Button>
         </DialogActions>
       </Dialog>
+
+      <ConfirmDialog open={!!aBorrar} danger title={`¿Eliminar este ${singular}?`} text="Esta acción no se puede deshacer." confirmLabel="Eliminar" onClose={() => setABorrar(null)} onConfirm={() => aBorrar && remove(aBorrar)} />
+      <Snackbar open={!!toast} autoHideDuration={3000} onClose={() => setToast("")} message={toast} anchorOrigin={{ vertical: "bottom", horizontal: "center" }} />
     </Box>
   );
 }
