@@ -1,0 +1,62 @@
+name: Publicar landing en GitHub Pages
+
+# Publica SOLO landing/ (sitio estático). El resto del monorepo no se despliega.
+on:
+  push:
+    branches: [main]
+    paths: ["landing/**", ".github/workflows/landing.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: landing/package-lock.json
+
+      - name: Calcular URLs
+        run: |
+          OWNER="$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')"
+          REPO="${{ github.event.repository.name }}"
+          # Dominio propio: define las variables SITE_URL y (vacía) BASE_PATH en Settings → Variables
+          BASE_PATH="${{ vars.LANDING_BASE_PATH }}"
+          if [ -z "${{ vars.LANDING_BASE_PATH }}" ] && [ -z "${{ vars.SITE_URL }}" ]; then BASE_PATH="/$REPO"; fi
+          SITE_URL="${{ vars.SITE_URL }}"
+          [ -z "$SITE_URL" ] && SITE_URL="https://$OWNER.github.io$BASE_PATH"
+          echo "NEXT_PUBLIC_BASE_PATH=$BASE_PATH" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SITE_URL=$SITE_URL" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_APP_URL=${{ vars.APP_URL }}" >> "$GITHUB_ENV"
+
+      - name: Instalar y construir
+        working-directory: landing
+        run: |
+          npm ci
+          npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: landing/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

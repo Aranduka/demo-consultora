@@ -6,3 +6,6 @@ out/
 db/data/
 *.log
 .DS_Store
+
+landing/out/
+landing/.next/
