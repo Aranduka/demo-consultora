@@ -10,3 +10,8 @@ db/data/
 landing/out/
 landing/.next/
 *.tsbuildinfo
+
+# Agentes de IA (configuración local generada)
+.gemini/
+.gentle-ai/
+.atl/
